@@ -62,7 +62,7 @@ public OnPluginStart()
 	if(sv_allow_thirdperson == INVALID_HANDLE)
 		SetFailState("sv_allow_thirdperson not found!");
 	Cvar_Method = CreateConVar("sm_ue_method", "normal", "This plugin has two alternative ways of putting the effects on the players: normal (more stable, can't hide head effects in first person), experimental (buggy, sometimes doesn't work but hides head effects in first person).");
-	Cvar_Flag = CreateConVar("sm_ue_flag", "o", "Restrict usage of the plugin to players with the given sourcemod flag.");
+	Cvar_Flag = CreateConVar("sm_ue_flag", "o", "Restrict usage of the plugin to players with the given sourcemod flag. If left empty everyone can access it.");
 	Cvar_Time = CreateConVar("sm_ue_time", "300", "How long (seconds) players are able to change the effect they are using after a round starts.");
 	AutoExecConfig(true, "unusual_effects")
 }
