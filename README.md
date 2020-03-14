@@ -1,6 +1,6 @@
 # Unusual Effects
 
-![overview](https://i.imgur.com/nfUgwId.gif)
+![overview](https://i.imgur.com/w4HY6Nc.gif)
 
 ### Description
 
@@ -12,11 +12,11 @@ This is a Counter-Strike: Global Offensive [sourcemod](https://www.sourcemod.net
 1. Download code from this git repository.
 2. Upload everything to your gameserver.
 3. Edit *addons/sourcemod/databases.cfg* and add a database entry for the plugin:
-> "unusual"
-	{
-		"driver"			"sqlite"
-		"database"			"unusual-effects"
-	}
+> "unusual"<br>
+	{<br>
+		"driver"			"sqlite"<br>
+		"database"			"unusual-effects"<br>
+	}<br>
 4. Edit server convars on *cfg/sourcemod/unusual_effects.cfg* to your taste.
 
 ### Chat Commands
