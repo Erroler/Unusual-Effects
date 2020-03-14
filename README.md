@@ -9,7 +9,7 @@ This is a Counter-Strike: Global Offensive [sourcemod](https://www.sourcemod.net
 
 ### Setup
 
-1. Download code from this git repository.
+1. [Download](https://github.com/Erroler/Unusual-Effects/archive/master.zip) the plugin from this git repository.
 2. Upload everything to your gameserver.
 3. Edit *addons/sourcemod/databases.cfg* and add a database entry for the plugin:
 > "unusual"<br>
