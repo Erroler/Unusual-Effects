@@ -32,7 +32,7 @@ Open the menu:
 
 * **sm_ue_method** - This plugin has two alternative ways of putting the effects on the players: *normal* (more stable, can't hide head effects in first person), *experimental* (buggy, sometimes doesn't work but hides head effects in first person). Default value: **normal**
 * **sm_ue_flag** - Restrict usage of the plugin to players with the given sourcemod flag. Default value: **o**
-* **sm_ue_time** - How long (seconds) players are able to change the effect they are using after a round starts. Default value: **o**
+* **sm_ue_allow_thirdperson** - Allow the usage of third person on the menu. Default value: **1**
 
 ### Known bugs
 
