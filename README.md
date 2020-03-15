@@ -41,4 +41,5 @@ Open the menu:
 ### Changelog
 
 **0.2** (15/03/2020) - Removed server convar related to restricting access to menu after X seconds passed since the round started. Added server convar to restrict access to third person.
+
 **0.1** (14/03/2020) - Initial release.
