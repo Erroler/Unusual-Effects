@@ -26,18 +26,17 @@ new Float:EffectAngle[128][2][3];
 new Handle:sv_allow_thirdperson = INVALID_HANDLE;
 new Handle:Cvar_Method = INVALID_HANDLE;
 new Handle:Cvar_Flag = INVALID_HANDLE;
-new Handle:Cvar_Time = INVALID_HANDLE;
+new Handle:Cvar_AllowTP = INVALID_HANDLE;
 
 new Index_Hat[MAXPLAYERS+1];
 new Index_Feet_Particle[MAXPLAYERS+1];
-new RoundStartTimestamp = 0;
 
 public Plugin:myinfo =
 {
 	name = "Unusual Effects",
 	author = "Erroler",
 	description = "",
-	version = "0.1",
+	version = "0.2",
 	url = "https://github.com/Erroler"
 };
 
@@ -54,7 +53,6 @@ public OnPluginStart()
 	if (DB == INVALID_HANDLE)	SetFailState("%s",  error);
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("player_death", Event_OnPlayerDeath);
-	HookEvent("round_start", Event_RoundStart);
 	//
 	CreateTimer(6.0, RemakeFeetParticles, _, TIMER_REPEAT);
 	
@@ -63,7 +61,7 @@ public OnPluginStart()
 		SetFailState("sv_allow_thirdperson not found!");
 	Cvar_Method = CreateConVar("sm_ue_method", "normal", "This plugin has two alternative ways of putting the effects on the players: normal (more stable, can't hide head effects in first person), experimental (buggy, sometimes doesn't work but hides head effects in first person).");
 	Cvar_Flag = CreateConVar("sm_ue_flag", "o", "Restrict usage of the plugin to players with the given sourcemod flag. If left empty everyone can access it.");
-	Cvar_Time = CreateConVar("sm_ue_time", "300", "How long (seconds) players are able to change the effect they are using after a round starts.");
+	Cvar_AllowTP = CreateConVar("sm_ue_allow_thirdperson", "1", "Allow the usage of third person on the menu.");
 	AutoExecConfig(true, "unusual_effects")
 }
 
@@ -76,11 +74,6 @@ public Action:RemakeFeetParticles(Handle:timer)
 			EquipClient_Feet(i);
 		}
 	}
-}
-
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	RoundStartTimestamp = GetTime();
 }
 
 ///////////////////////////
@@ -331,8 +324,10 @@ public Action:UnusualMainMenu_CMD(client,args)
 	Format(ToFormat, sizeof(ToFormat), "Change feet unusual effects\nCurrent effect: %s", Equipped);
 	AddMenuItem(menu, "ee_feet", ToFormat);
 	//
-	if(IsnOnTP[client])	AddMenuItem(menu, "ee_fp", "Go back to first person");
-	else 	AddMenuItem(menu, "ee_tp", "See effects in third person", ITEMDRAW_DISABLED);
+	if(GetConVarBool(Cvar_AllowTP)) {
+		if(IsnOnTP[client])	AddMenuItem(menu, "ee_fp", "Go back to first person");
+		else 	AddMenuItem(menu, "ee_tp", "See effects in third person", ITEMDRAW_DISABLED);
+	}
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 	return Plugin_Handled;
@@ -464,7 +459,7 @@ public MenuHandler1(Handle:menu, MenuAction:action, param1, param2)
 				GetTrieString(Trie, effectid_select, temp, sizeof(temp));
 				CPrintToChat(param1, "{DARKRED}[Unusual Effects]{YELLOW} You have selected {GREY}%s{YELLOW}.", EffectNames[StringToInt(temp)][0]);
 				Head_Effects_Menu(param1);
-				if(!is_same)	EquipClient_Head(param1, 1);
+				if(!is_same)	EquipClient_Head(param1);
 			}
 		}
 		case MenuAction_Cancel: 
@@ -565,7 +560,7 @@ public MenuHandler2(Handle:menu, MenuAction:action, param1, param2)
 				GetTrieString(Trie, effectid_select, temp, sizeof(temp));
 				CPrintToChat(param1, "{DARKRED}[Unusual Effects]{YELLOW} You have selected {GREY}%s{YELLOW}.", EffectNames[StringToInt(temp)][1]);
 				Feet_Effects_Menu(param1);
-				EquipClient_Feet(param1, 1);
+				EquipClient_Feet(param1);
 			}
 		}
 		case MenuAction_Cancel: 
@@ -664,38 +659,20 @@ EquipClient(client)
 	if(EffectIDChoosen[client][1][0] != EOS) EquipClient_Feet(client);
 }
 
-EquipClient_Head(client, menu = 0)
+EquipClient_Head(client)
 {
 	if(!IsPlayerAlive(client))
 	{
 		return;
-	}
-	if(menu)
-	{
-		new time_to_change = GetConVarInt(Cvar_Time);
-		if((GetTime() - RoundStartTimestamp) > time_to_change && time_to_change != 0)
-		{
-			CPrintToChat(client, "{DARKRED}[Unusual Effects]{YELLOW} Since the round has started more than %i seconds ago the change will only take place in the next round.", time_to_change);
-			return;
-		}
 	}
 	CreateTimer(1.0, EquipEffectHead, client);
 }
 
-EquipClient_Feet(client, menu = 0)
+EquipClient_Feet(client)
 {
 	if(!IsPlayerAlive(client))
 	{
 		return;
-	}
-	if(menu)
-	{
-		new time_to_change = GetConVarInt(Cvar_Time);
-		if((GetTime() - RoundStartTimestamp) > time_to_change && time_to_change != 0)
-		{
-			CPrintToChat(client, "{DARKRED}[Unusual Effects]{YELLOW} Since the round has started more than %i seconds ago the change will only take place in the next round.", time_to_change);
-			return;
-		}
 	}
 	DestroyParticle(client);
 	new String:temp[64];
