@@ -37,3 +37,8 @@ Open the menu:
 ### Known bugs
 
 * Players can't see this the effects the first time they connect after downloading the files from the server. **This is unavoidable.** The client's game engine only loads the particle effects next time the map changes.
+
+### Changelog
+
+**0.2** (15/03/2020) - Removed server convar related to restricting access to menu after X seconds passed since the round started. Added server convar to restrict access to third person.
+**0.1** (14/03/2020) - Initial release.
